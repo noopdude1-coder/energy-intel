@@ -1,0 +1,7 @@
+pandas>=2.2
+requests>=2.32
+yfinance>=0.2.40
+fredapi>=0.5.2
+jinja2>=3.1
+pyyaml>=6.0
+python-dateutil>=2.9

@@ -1,0 +1,32 @@
+# Permian-focused energy watchlist.
+# `peers` is the Permian-weighted peer set used for the peer board.
+# `majors` and `other` feed the broader watchlist but are separated for ranking.
+# Thresholds drive signal-flag logic in src/analysis/signals.py.
+
+peers:
+  - PR      # Permian Resources (primary position)
+  - FANG    # Diamondback
+  - MTDR    # Matador
+  - CIVI    # Civitas
+  - VTLE    # Vital
+  - OVV     # Ovintiv
+  - APA     # APA Corp
+  - OXY     # Occidental
+  - EOG     # EOG
+  - COP     # ConocoPhillips
+
+majors:
+  - XOM
+  - CVX
+
+benchmarks:
+  - XLE     # Energy sector ETF
+  - XOP     # E&P ETF
+  - USO     # WTI proxy
+  - UNG     # Henry Hub proxy
+
+thresholds:
+  stop_warning_pct: 2.0        # flag positions within this % of trailing stop
+  mover_abs_pct: 2.0           # |1D%| > this = flag in overnight/movers section
+  brent_wti_spread_hi: 6.0     # USD/bbl, flag when exceeded
+  brent_wti_spread_lo: 2.0     # USD/bbl, flag when below

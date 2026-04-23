@@ -1,0 +1,9 @@
+{
+  "response": {
+    "data": [
+      {"period": "2026-04-17", "series": "WCESTUS1", "value": "456789"},
+      {"period": "2026-04-10", "series": "WCESTUS1", "value": "458200"},
+      {"period": "2026-04-03", "series": "WCESTUS1", "value": "455100"}
+    ]
+  }
+}

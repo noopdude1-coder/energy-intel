@@ -1,0 +1,13 @@
+# Copy to positions.yml and fill in. positions.yml is gitignored.
+# trailing_stop is expressed as an absolute price (USD) at which the stop triggers.
+# cost_basis is the average cost used for unrealized P/L.
+
+holdings:
+  - ticker: PR
+    shares: 100
+    cost_basis: 15.00
+    trailing_stop: 14.25
+  # - ticker: FANG
+  #   shares: 20
+  #   cost_basis: 180.00
+  #   trailing_stop: 172.00
