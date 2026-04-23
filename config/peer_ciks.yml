@@ -1,0 +1,24 @@
+# SEC EDGAR CIK (Central Index Key) numbers for the Permian peer set plus majors.
+# Verified against https://www.sec.gov/edgar/browse/ as of April 2026.
+# CIKs are 10-digit zero-padded strings — that's the format the EDGAR APIs accept.
+#
+# Reorg notes:
+# - PR: CIK retained from predecessor Centennial Resource Development (renamed 2022).
+# - CIVI: CIK retained from predecessor Bonanza Creek Energy (renamed Nov 2021).
+# - VTLE: CIK retained from predecessor Laredo Petroleum (renamed Jan 2023).
+# - OVV: new U.S.-domiciled CIK at 2020 reorg; Encana's old CIK 0001157806 is stale.
+# - APA: new holding-co CIK at 2021 reorg; Apache Corp's old CIK 0000006769 is stale.
+
+ciks:
+  PR:   "0001658566"
+  FANG: "0001539838"
+  MTDR: "0001520006"
+  CIVI: "0001509589"
+  VTLE: "0001528129"
+  OVV:  "0001792580"
+  APA:  "0001841666"
+  OXY:  "0000797468"
+  EOG:  "0000821189"
+  COP:  "0001163165"
+  XOM:  "0000034088"
+  CVX:  "0000093410"

@@ -1,0 +1,44 @@
+name: peer-report
+
+# Manual-trigger only. Run after each earnings wave (Feb / May / Aug / Nov)
+# when all peers have reported. Not on a strict cron because filing timing
+# varies and stale partials aren't useful.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  peer-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyarrow
+
+      - name: Run peer report
+        env:
+          SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
+        run: python -m src.peer_report -v
+
+      - name: Commit report
+        run: |
+          git config user.name "energy-intel-bot"
+          git config user.email "energy-intel-bot@users.noreply.github.com"
+          git add briefs/peer_comp.md data/peer_history.parquet
+          if git diff --cached --quiet; then
+            echo "No peer-report changes"
+            exit 0
+          fi
+          TODAY=$(date -u +%Y-%m-%d)
+          git commit -m "peer-report: ${TODAY}"
+          git push

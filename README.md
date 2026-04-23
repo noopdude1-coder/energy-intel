@@ -35,6 +35,20 @@ pytest
 
 Tests use recorded fixtures in `tests/fixtures/` and never hit live APIs.
 
+## Peer unit economics (Phase 2)
+
+On-demand run, post-earnings:
+
+```bash
+python -m src.peer_report
+```
+
+Pulls SEC EDGAR XBRL company facts for every ticker in `config/peer_ciks.yml`,
+computes TTM OCF / CapEx / FCF / net debt / EBITDAX / ND-to-EBITDAX, writes
+`briefs/peer_comp.md`, and appends the snapshot to `data/peer_history.parquet`.
+No API key — SEC requires a descriptive `User-Agent`; override via the
+`SEC_USER_AGENT` env var before running.
+
 ## Scheduling
 
 `.github/workflows/daily-brief.yml` runs weekdays at 06:00 America/Chicago,
@@ -43,7 +57,9 @@ generates the brief, and commits it. Required repo secrets: `EIA_API_KEY`,
 
 ## Roadmap
 
-Phase 1 (this): daily brief shipping on schedule.
-Phase 2: SEC-driven peer unit economics (CapEx/BOE, FCF yield, hedged %).
+Phase 1 (shipped): daily brief on schedule.
+Phase 2 (shipped): SEC-driven peer unit economics (FCF yield, net debt, ND/EBITDAX).
+  Deferred to a future iteration: CapEx/BOE, hedged %, PV-10/EV, D&C/lateral ft —
+  these live in custom XBRL extensions or narrative text and need per-filer parsers.
 Phase 3: GitHub Pages dashboard.
 Phase 4: Geopolitical + LLM headline summarization.
