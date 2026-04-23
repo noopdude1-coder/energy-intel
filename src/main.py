@@ -16,6 +16,7 @@ import yaml
 
 from src.analysis import peer_comp, position, signals
 from src.brief.generate import BriefInputs, build_eia_section, render
+from src.delivery import email as email_delivery
 from src.sources import baker_hughes, eia, equities, macro
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -148,6 +149,21 @@ def run(*, as_of: datetime | None = None) -> Path:
     out_path = BRIEFS_DIR / f"{as_of.date().isoformat()}.md"
     out_path.write_text(body)
     logger.info("wrote %s (%d bytes)", out_path, len(body))
+
+    email_cfg = email_delivery.EmailConfig.from_env()
+    if email_cfg is not None:
+        _safe(
+            lambda: email_delivery.send_brief(
+                email_cfg,
+                subject=f"Energy Intel — {as_of.date().isoformat()}",
+                markdown_body=body,
+            ),
+            label="email_delivery.send_brief",
+            default=False,
+        )
+    else:
+        logger.info("email delivery not configured (RESEND_API_KEY/RESEND_TO); skipping")
+
     return out_path
 
 

@@ -5,3 +5,6 @@ fredapi>=0.5.2
 jinja2>=3.1
 pyyaml>=6.0
 python-dateutil>=2.9
+beautifulsoup4>=4.12
+lxml>=5.0
+openpyxl>=3.1
