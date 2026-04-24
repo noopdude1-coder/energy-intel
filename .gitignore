@@ -24,6 +24,9 @@ config/positions.yml
 data/raw/*
 !data/raw/.gitkeep
 
+# Generated static site (deployed via Pages, never committed)
+/site/
+
 # OS / editor
 .DS_Store
 Thumbs.db

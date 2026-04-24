@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block head_extra %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+{% endblock %}
+{% block content %}
+<h1>Macro</h1>
+{% if not series %}
+<p><em>No macro series available. Set <code>FRED_API_KEY</code> / <code>EIA_API_KEY</code> to populate charts.</em></p>
+{% endif %}
+
+{% for chart in series %}
+<section class="chart-block">
+  <h2>{{ chart.title }}</h2>
+  {% if chart.subtitle %}<p class="meta">{{ chart.subtitle }}</p>{% endif %}
+  <canvas id="{{ chart.id }}" height="280"></canvas>
+  <script id="{{ chart.id }}-data" type="application/json">{{ chart.points|tojson }}</script>
+  <script>
+  (function () {
+    var data = JSON.parse(document.getElementById('{{ chart.id }}-data').textContent);
+    new Chart(document.getElementById('{{ chart.id }}'), {
+      type: 'line',
+      data: {
+        datasets: [{
+          label: '{{ chart.label }}',
+          data: data,
+          borderColor: '{{ chart.color }}',
+          backgroundColor: '{{ chart.color }}22',
+          fill: true,
+          pointRadius: 0,
+          tension: 0.1
+        }]
+      },
+      options: {
+        responsive: true,
+        parsing: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { type: 'time', time: { unit: '{{ chart.time_unit|default("month") }}' } },
+          y: { title: { display: true, text: '{{ chart.y_label }}' } }
+        }
+      }
+    });
+  })();
+  </script>
+</section>
+{% endfor %}
+{% endblock %}
+{% block body_extra %}
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+{% endblock %}

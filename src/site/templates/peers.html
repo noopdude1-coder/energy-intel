@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block head_extra %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+{% endblock %}
+{% block content %}
+<h1>Permian peer unit economics</h1>
+{% if peer_report_html %}
+  {{ peer_report_html|safe }}
+{% else %}
+  <p><em>No peer report yet. Run <code>python -m src.peer_report</code> to generate one.</em></p>
+{% endif %}
+
+{% if history_points %}
+<h2>FCF yield over time</h2>
+<canvas id="fcf-chart" height="320" aria-label="FCF yield history"></canvas>
+<script id="peer-history-data" type="application/json">{{ history_points|tojson }}</script>
+<script>
+(function () {
+  var raw = document.getElementById('peer-history-data').textContent;
+  var data = JSON.parse(raw);
+  var datasets = Object.keys(data).map(function (ticker, i) {
+    var palette = ['#2b6cb0', '#c53030', '#2f855a', '#6b46c1', '#dd6b20',
+                   '#319795', '#b7791f', '#718096', '#9f1239', '#1a365d'];
+    return {
+      label: ticker,
+      data: data[ticker].map(function (p) { return { x: p.as_of, y: p.fcf_yield * 100 }; }),
+      borderColor: palette[i % palette.length],
+      backgroundColor: palette[i % palette.length],
+      pointRadius: 3,
+      tension: 0.2
+    };
+  });
+  new Chart(document.getElementById('fcf-chart'), {
+    type: 'line',
+    data: { datasets: datasets },
+    options: {
+      responsive: true,
+      parsing: false,
+      scales: {
+        x: { type: 'time', time: { unit: 'quarter' }, title: { display: true, text: 'Filing quarter' } },
+        y: { title: { display: true, text: 'FCF yield (%)' } }
+      }
+    }
+  });
+})();
+</script>
+{% else %}
+<p><em>History chart will appear once multiple peer reports have accumulated.</em></p>
+{% endif %}
+{% endblock %}
+{% block body_extra %}
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+{% endblock %}

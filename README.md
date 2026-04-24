@@ -55,11 +55,35 @@ No API key — SEC requires a descriptive `User-Agent`; override via the
 generates the brief, and commits it. Required repo secrets: `EIA_API_KEY`,
 `FRED_API_KEY`.
 
+## Public dashboard (Phase 3)
+
+```bash
+python -m src.site.build                            # writes ./site/
+python -m src.site.build --base-path energy-intel   # for github.io/energy-intel/
+```
+
+Produces a static site with four pages:
+- `/` — latest brief
+- `/archive/` — every past brief, client-side search
+- `/peers/` — peer unit economics table + FCF-yield history chart
+- `/macro/` — rolling FRED series (WTI, Brent, HH, DXY, 10Y) plus EIA SPR and
+  Permian production when keys are available
+
+**Safety:** every brief runs through `src/site/redact.py` before rendering, which
+strips the `## Position Status` section. Even if a brief was generated locally
+with `positions.yml` populated and committed by mistake, position data never
+reaches the public site.
+
+Deploy is automatic via `.github/workflows/pages.yml`. To enable:
+1. Settings → Pages → Build and deployment source = **GitHub Actions**.
+2. Push anything that touches `briefs/`, `data/peer_history.parquet`, or
+   `src/site/`.
+
 ## Roadmap
 
 Phase 1 (shipped): daily brief on schedule.
 Phase 2 (shipped): SEC-driven peer unit economics (FCF yield, net debt, ND/EBITDAX).
   Deferred to a future iteration: CapEx/BOE, hedged %, PV-10/EV, D&C/lateral ft —
   these live in custom XBRL extensions or narrative text and need per-filer parsers.
-Phase 3: GitHub Pages dashboard.
+Phase 3 (shipped): GitHub Pages dashboard.
 Phase 4: Geopolitical + LLM headline summarization.

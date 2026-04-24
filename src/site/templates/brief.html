@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<article class="brief">
+  <p class="meta"><a href="{{ link('archive/') }}">← archive</a> · {{ date_str }}</p>
+  {{ brief_html|safe }}
+</article>
+{% endblock %}

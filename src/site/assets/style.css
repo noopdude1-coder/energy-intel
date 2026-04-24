@@ -1,0 +1,116 @@
+:root {
+  --fg: #1a202c;
+  --fg-muted: #4a5568;
+  --bg: #fafafa;
+  --bg-alt: #fff;
+  --accent: #2b6cb0;
+  --rule: #e2e8f0;
+  --warn: #b7791f;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+.topbar {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-wrap: wrap;
+}
+
+.brand {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+nav a {
+  color: var(--fg-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  margin-right: 0.75rem;
+}
+
+nav a:hover { color: var(--accent); }
+
+main {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+h1 { font-size: 1.6rem; margin-top: 0.5rem; }
+h2 { font-size: 1.2rem; margin-top: 2rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.25rem; }
+h3 { font-size: 1rem; }
+
+a { color: var(--accent); }
+
+code, pre { font-family: var(--mono); font-size: 0.9em; }
+pre { background: var(--bg-alt); padding: 0.75rem; overflow-x: auto; border-radius: 4px; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 1rem 0;
+}
+
+th, td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--rule);
+  text-align: right;
+}
+
+th:first-child, td:first-child { text-align: left; }
+
+thead th {
+  background: var(--bg-alt);
+  font-weight: 600;
+  border-bottom: 2px solid var(--rule);
+}
+
+.meta { color: var(--fg-muted); font-size: 0.85rem; }
+.preview { color: var(--fg-muted); font-size: 0.88rem; }
+
+input[type="search"] {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font: inherit;
+  background: var(--bg-alt);
+}
+
+ul#brief-list { list-style: none; padding: 0; }
+ul#brief-list li { padding: 0.4rem 0; border-bottom: 1px solid var(--rule); }
+
+.chart-block { margin-bottom: 2.5rem; }
+canvas { background: var(--bg-alt); border: 1px solid var(--rule); border-radius: 4px; padding: 0.5rem; }
+
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--fg-muted);
+  border-top: 1px solid var(--rule);
+}
+
+@media (max-width: 480px) {
+  .topbar { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  nav a { margin-right: 0.5rem; }
+}
