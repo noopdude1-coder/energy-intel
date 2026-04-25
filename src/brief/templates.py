@@ -46,9 +46,14 @@ No watchlist names moved more than {{ mover_threshold }}% on the day.
 {% if signals %}{% for s in signals %}- **{{ s.name }}** — {{ s.detail }}
 {% endfor %}{% else %}_None firing._
 {% endif %}
+## Headlines
+
+{% if headlines_section %}{{ headlines_section }}
+{% else %}_No headlines fetched._
+{% endif %}
 ---
 
-_Generated {{ generated_at }} UTC. Phase 1 MVP._
+_Generated {{ generated_at }} UTC._
 """
 
 

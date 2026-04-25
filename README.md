@@ -79,6 +79,17 @@ Deploy is automatic via `.github/workflows/pages.yml`. To enable:
 2. Push anything that touches `briefs/`, `data/peer_history.parquet`, or
    `src/site/`.
 
+## Headlines (Phase 4)
+
+The brief includes a `## Headlines` section pulled from public RSS (EIA Today
+in Energy, OilPrice, Rigzone) and summarized through Claude Haiku 4.5 into 3-5
+ranked bullets for a Permian operator. If `ANTHROPIC_API_KEY` is unset (or the
+call fails), the section falls back to a raw bullet list of the top items — the
+brief always ships.
+
+Add `ANTHROPIC_API_KEY` as a repo secret to enable LLM summarization. Cost is
+~$0.001/day at this volume.
+
 ## Roadmap
 
 Phase 1 (shipped): daily brief on schedule.
@@ -86,4 +97,4 @@ Phase 2 (shipped): SEC-driven peer unit economics (FCF yield, net debt, ND/EBITD
   Deferred to a future iteration: CapEx/BOE, hedged %, PV-10/EV, D&C/lateral ft —
   these live in custom XBRL extensions or narrative text and need per-filer parsers.
 Phase 3 (shipped): GitHub Pages dashboard.
-Phase 4: Geopolitical + LLM headline summarization.
+Phase 4 (shipped): RSS headlines + Claude Haiku summarization.

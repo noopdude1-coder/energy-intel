@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Sample Energy Feed</title>
+    <link>https://example.com/feed</link>
+    <description>Test fixture</description>
+    <item>
+      <title>OPEC+ Holds Output Steady Through Q3</title>
+      <link>https://example.com/opec-q3</link>
+      <pubDate>Fri, 24 Apr 2026 12:00:00 GMT</pubDate>
+      <description>The cartel held production unchanged at 39.7 mb/d after a brief virtual meeting.</description>
+    </item>
+    <item>
+      <title>Permian Production Tops 6.4 mb/d in March</title>
+      <link>https://example.com/permian-march</link>
+      <pubDate>Thu, 23 Apr 2026 18:30:00 GMT</pubDate>
+      <description>EIA Drilling Productivity Report shows continued growth led by Delaware sub-basin.</description>
+    </item>
+    <item>
+      <title>Old Stale Headline From Last Year</title>
+      <link>https://example.com/old</link>
+      <pubDate>Mon, 01 Jan 2024 12:00:00 GMT</pubDate>
+      <description>This should be filtered out by the lookback window.</description>
+    </item>
+    <item>
+      <title>Headline With No Date</title>
+      <link>https://example.com/nodate</link>
+      <description>No pubDate set; should still be kept.</description>
+    </item>
+  </channel>
+</rss>
