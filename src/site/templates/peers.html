@@ -2,6 +2,7 @@
 {% block head_extra %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 {% endblock %}
 {% block content %}
 <h1>Permian peer unit economics</h1>
@@ -13,21 +14,25 @@
 
 {% if history_points %}
 <h2>FCF yield over time</h2>
-<canvas id="fcf-chart" height="320" aria-label="FCF yield history"></canvas>
+<p class="meta chart-hint">Hover to compare across tickers · scroll or drag to zoom · double-click to reset.</p>
+<div class="chart-canvas chart-canvas-tall"><canvas id="fcf-chart" aria-label="FCF yield history"></canvas></div>
 <script id="peer-history-data" type="application/json">{{ history_points|tojson }}</script>
 <script>
 (function () {
   var raw = document.getElementById('peer-history-data').textContent;
   var data = JSON.parse(raw);
+  var palette = ['#1e3a5f', '#b91c1c', '#047857', '#6b46c1', '#dd6b20',
+                 '#0e7490', '#b45309', '#475569', '#9f1239', '#0f766e'];
   var datasets = Object.keys(data).map(function (ticker, i) {
-    var palette = ['#2b6cb0', '#c53030', '#2f855a', '#6b46c1', '#dd6b20',
-                   '#319795', '#b7791f', '#718096', '#9f1239', '#1a365d'];
     return {
       label: ticker,
       data: data[ticker].map(function (p) { return { x: p.as_of, y: p.fcf_yield * 100 }; }),
       borderColor: palette[i % palette.length],
       backgroundColor: palette[i % palette.length],
       pointRadius: 3,
+      pointHoverRadius: 5,
+      pointHitRadius: 12,
+      borderWidth: 1.75,
       tension: 0.2
     };
   });
@@ -36,11 +41,56 @@
     data: { datasets: datasets },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false, axis: 'x' },
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } },
+        tooltip: {
+          backgroundColor: '#0f172a',
+          titleColor: '#f8fafc',
+          bodyColor: '#f8fafc',
+          borderColor: '#334155',
+          borderWidth: 1,
+          padding: 8,
+          callbacks: {
+            title: function (items) {
+              if (!items.length) return '';
+              var d = new Date(items[0].parsed.x);
+              return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            },
+            label: function (item) {
+              return item.dataset.label + ': ' + item.parsed.y.toFixed(2) + '%';
+            }
+          }
+        },
+        zoom: {
+          pan: { enabled: true, mode: 'x', modifierKey: 'shift' },
+          zoom: {
+            wheel: { enabled: true },
+            pinch: { enabled: true },
+            drag: { enabled: true, backgroundColor: 'rgba(30,58,95,0.10)', borderColor: 'rgba(30,58,95,0.5)', borderWidth: 1 },
+            mode: 'x'
+          }
+        }
+      },
       scales: {
-        x: { type: 'time', time: { unit: 'quarter' }, title: { display: true, text: 'Filing quarter' } },
-        y: { title: { display: true, text: 'FCF yield (%)' } }
+        x: {
+          type: 'time',
+          time: { unit: 'quarter' },
+          title: { display: true, text: 'Filing quarter', color: '#64748b' },
+          grid: { color: '#f1f5f9' },
+          ticks: { color: '#64748b', maxRotation: 0 }
+        },
+        y: {
+          title: { display: true, text: 'FCF yield (%)', color: '#64748b' },
+          grid: { color: '#f1f5f9' },
+          ticks: { color: '#64748b' }
+        }
       }
     }
+  });
+  document.getElementById('fcf-chart').addEventListener('dblclick', function () {
+    Chart.getChart('fcf-chart').resetZoom();
   });
 })();
 </script>

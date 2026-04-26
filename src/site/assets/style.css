@@ -270,17 +270,43 @@ input[type="search"]:focus {
 /* ---------- Charts ---------- */
 
 .chart-block {
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
   background: var(--bg-panel);
   border: 1px solid var(--rule);
   border-radius: 2px;
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.25rem 1.25rem;
 }
 
 .chart-block h2 {
   margin-top: 0;
   border: none;
   padding: 0;
+}
+
+.chart-block .meta {
+  margin: 0 0 0.5rem 0;
+}
+
+.chart-canvas {
+  position: relative;
+  width: 100%;
+  height: 280px;
+}
+
+.chart-canvas-tall {
+  height: 380px;
+}
+
+@media (min-width: 1080px) {
+  .chart-canvas { height: 320px; }
+  .chart-canvas-tall { height: 440px; }
+}
+
+.chart-hint {
+  font-size: 0.78rem;
+  color: var(--fg-subtle);
+  margin: -0.25rem 0 0.75rem;
+  font-style: italic;
 }
 
 canvas { background: transparent; }

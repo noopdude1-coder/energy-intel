@@ -2,9 +2,11 @@
 {% block head_extra %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 {% endblock %}
 {% block content %}
 <h1>Macro</h1>
+{% if series %}<p class="meta chart-hint">Hover for crosshair · scroll or drag to zoom · double-click to reset.</p>{% endif %}
 {% if not series %}
 <p><em>No macro series available. Set <code>FRED_API_KEY</code> / <code>EIA_API_KEY</code> to populate charts.</em></p>
 {% endif %}
@@ -13,32 +15,83 @@
 <section class="chart-block">
   <h2>{{ chart.title }}</h2>
   {% if chart.subtitle %}<p class="meta">{{ chart.subtitle }}</p>{% endif %}
-  <canvas id="{{ chart.id }}" height="280"></canvas>
+  <div class="chart-canvas"><canvas id="{{ chart.id }}"></canvas></div>
   <script id="{{ chart.id }}-data" type="application/json">{{ chart.points|tojson }}</script>
   <script>
   (function () {
     var data = JSON.parse(document.getElementById('{{ chart.id }}-data').textContent);
+    var yLabel = '{{ chart.y_label }}';
+    var seriesLabel = '{{ chart.label }}';
     new Chart(document.getElementById('{{ chart.id }}'), {
       type: 'line',
       data: {
         datasets: [{
-          label: '{{ chart.label }}',
+          label: seriesLabel,
           data: data,
           borderColor: '{{ chart.color }}',
           backgroundColor: '{{ chart.color }}22',
           fill: true,
           pointRadius: 0,
-          tension: 0.1
+          pointHoverRadius: 4,
+          pointHitRadius: 12,
+          borderWidth: 1.5,
+          tension: 0.15
         }]
       },
       options: {
         responsive: true,
-        plugins: { legend: { display: false } },
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false, axis: 'x' },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#0f172a',
+            titleColor: '#f8fafc',
+            bodyColor: '#f8fafc',
+            borderColor: '#334155',
+            borderWidth: 1,
+            padding: 8,
+            displayColors: false,
+            callbacks: {
+              title: function (items) {
+                if (!items.length) return '';
+                var d = new Date(items[0].parsed.x);
+                return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+              },
+              label: function (item) {
+                var v = item.parsed.y;
+                var formatted = (Math.abs(v) >= 1000) ? v.toLocaleString(undefined, { maximumFractionDigits: 0 }) : v.toFixed(2);
+                return seriesLabel + ': ' + formatted + ' ' + yLabel;
+              }
+            }
+          },
+          zoom: {
+            pan: { enabled: true, mode: 'x', modifierKey: 'shift' },
+            zoom: {
+              wheel: { enabled: true },
+              pinch: { enabled: true },
+              drag: { enabled: true, backgroundColor: 'rgba(30,58,95,0.10)', borderColor: 'rgba(30,58,95,0.5)', borderWidth: 1 },
+              mode: 'x'
+            }
+          }
+        },
         scales: {
-          x: { type: 'time', time: { unit: '{{ chart.time_unit|default("month") }}' } },
-          y: { title: { display: true, text: '{{ chart.y_label }}' } }
+          x: {
+            type: 'time',
+            time: { unit: '{{ chart.time_unit|default("month") }}' },
+            grid: { color: '#f1f5f9' },
+            ticks: { color: '#64748b', maxRotation: 0 }
+          },
+          y: {
+            title: { display: true, text: yLabel, color: '#64748b' },
+            grid: { color: '#f1f5f9' },
+            ticks: { color: '#64748b' }
+          }
         }
       }
+    });
+    document.getElementById('{{ chart.id }}').addEventListener('dblclick', function () {
+      Chart.getChart('{{ chart.id }}').resetZoom();
     });
   })();
   </script>
