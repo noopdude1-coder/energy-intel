@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # so we can dispatch the pages workflow at the end
 
 jobs:
   peer-report:
@@ -34,14 +35,23 @@ jobs:
         run: python -m src.peer_report -v
 
       - name: Commit report
+        id: commit
         run: |
           git config user.name "energy-intel-bot"
           git config user.email "energy-intel-bot@users.noreply.github.com"
           git add briefs/peer_comp.md data/peer_history.parquet
           if git diff --cached --quiet; then
             echo "No peer-report changes"
+            echo "committed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           TODAY=$(date -u +%Y-%m-%d)
           git commit -m "peer-report: ${TODAY}"
           git push
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger pages rebuild
+        if: steps.commit.outputs.committed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run pages.yml --ref main --repo "${{ github.repository }}"
