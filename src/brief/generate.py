@@ -25,6 +25,7 @@ class BriefInputs:
     eia_section: str
     mover_threshold_pct: float
     movers: list[dict[str, Any]]
+    headlines_section: str = ""
 
 
 def render(inputs: BriefInputs) -> str:
@@ -47,6 +48,7 @@ def render(inputs: BriefInputs) -> str:
         eia_section=inputs.eia_section,
         mover_threshold=f"{inputs.mover_threshold_pct:.1f}",
         movers=inputs.movers,
+        headlines_section=inputs.headlines_section,
     )
     return rendered.rstrip() + "\n"
 

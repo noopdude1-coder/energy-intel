@@ -14,10 +14,11 @@ from pathlib import Path
 import pandas as pd
 import yaml
 
+from src.analysis import headlines as headline_analysis
 from src.analysis import peer_comp, position, signals
 from src.brief.generate import BriefInputs, build_eia_section, render
 from src.delivery import email as email_delivery
-from src.sources import baker_hughes, eia, equities, macro
+from src.sources import baker_hughes, eia, equities, headlines, macro
 
 ROOT = Path(__file__).resolve().parent.parent
 CONFIG_DIR = ROOT / "config"
@@ -131,6 +132,13 @@ def run(*, as_of: datetime | None = None) -> Path:
     if rs:
         firing.append(rs)
 
+    headline_items = _safe(headlines.fetch, label="headlines.fetch", default=[])
+    headlines_section = _safe(
+        lambda: headline_analysis.summarize(headline_items),
+        label="headlines.summarize",
+        default="_Headlines unavailable._",
+    )
+
     inputs = BriefInputs(
         as_of=as_of,
         macro=macro_snap,
@@ -141,6 +149,7 @@ def run(*, as_of: datetime | None = None) -> Path:
         eia_section=eia_section,
         mover_threshold_pct=mover_threshold,
         movers=movers,
+        headlines_section=headlines_section,
     )
 
     body = render(inputs)
