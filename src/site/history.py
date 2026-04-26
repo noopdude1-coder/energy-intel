@@ -65,7 +65,6 @@ def build_macro_charts(*, window_days: int = 730) -> list[ChartSpec]:
     if client is not None:
         fred_specs = [
             ("wti", macro_source.SERIES["wti"], "WTI spot", "$ / bbl", "#c53030"),
-            ("brent", macro_source.SERIES["brent"], "Brent spot", "$ / bbl", "#6b46c1"),
             ("hh", macro_source.SERIES["hh_gas"], "Henry Hub spot", "$ / MMBtu", "#dd6b20"),
             ("dxy", macro_source.SERIES["dxy"], "USD (broad)", "index", "#2b6cb0"),
             ("ten_year", macro_source.SERIES["ten_year"], "10Y Treasury", "%", "#2f855a"),
