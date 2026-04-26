@@ -1,9 +1,12 @@
 name: peer-report
 
-# Manual-trigger only. Run after each earnings wave (Feb / May / Aug / Nov)
-# when all peers have reported. Not on a strict cron because filing timing
-# varies and stale partials aren't useful.
+# Weekly run on Sundays at 12:00 UTC (06:00 CST / 07:00 CDT). Picks up any
+# 10-Q / 10-K filings that landed during the week. Outside earnings season
+# the parquet won't change, so the commit step no-ops on push.
+# Manual trigger also supported for ad-hoc refresh after big filings.
 on:
+  schedule:
+    - cron: "0 12 * * 0"
   workflow_dispatch: {}
 
 permissions:
