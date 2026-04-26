@@ -27,6 +27,19 @@
     Position data never exposed on this site.
   </small>
 </footer>
+<script>
+// Colorize +/- numerics in any rendered <td>.
+(function () {
+  var re = /^([+\-−])\s*\$?[\d,]+(?:\.\d+)?\s*%?$/;
+  document.querySelectorAll('td').forEach(function (td) {
+    var t = td.textContent.trim();
+    var m = t.match(re);
+    if (!m) return;
+    if (m[1] === '+') td.classList.add('pos');
+    else td.classList.add('neg');
+  });
+})();
+</script>
 {% block body_extra %}{% endblock %}
 </body>
 </html>

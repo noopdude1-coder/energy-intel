@@ -49,7 +49,7 @@ jobs:
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
-        run: python -m src.site.build --out site
+        run: python -m src.site.build --out site --base-path energy-intel
 
       - uses: actions/upload-pages-artifact@v3
         with:
