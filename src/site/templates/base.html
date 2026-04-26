@@ -39,6 +39,44 @@
     else td.classList.add('neg');
   });
 })();
+
+// Click-to-sort table headers. Numeric cells (currency, %, ratios) sort
+// numerically; everything else falls back to localeCompare.
+(function () {
+  function cellNumeric(text) {
+    var m = text.replace(/,/g, '').match(/-?\d+(?:\.\d+)?/);
+    return m ? parseFloat(m[0]) : null;
+  }
+  document.querySelectorAll('table').forEach(function (table) {
+    var thead = table.tHead;
+    var tbody = table.tBodies[0];
+    if (!thead || !tbody) return;
+    Array.from(thead.rows[0].cells).forEach(function (th, idx) {
+      th.classList.add('sortable');
+      th.addEventListener('click', function () {
+        var rows = Array.from(tbody.rows);
+        var asc = th.dataset.sortDir !== 'asc';
+        var sample = rows.map(function (r) { return cellNumeric((r.cells[idx] || {}).textContent || ''); });
+        var numeric = sample.filter(function (v) { return v !== null; }).length >= rows.length / 2;
+        rows.sort(function (a, b) {
+          var av = (a.cells[idx] || {}).textContent || '';
+          var bv = (b.cells[idx] || {}).textContent || '';
+          if (numeric) {
+            var an = cellNumeric(av);
+            var bn = cellNumeric(bv);
+            if (an === null) an = asc ? Infinity : -Infinity;
+            if (bn === null) bn = asc ? Infinity : -Infinity;
+            return asc ? an - bn : bn - an;
+          }
+          return asc ? av.localeCompare(bv) : bv.localeCompare(av);
+        });
+        Array.from(thead.rows[0].cells).forEach(function (h) { h.removeAttribute('data-sort-dir'); });
+        th.dataset.sortDir = asc ? 'asc' : 'desc';
+        rows.forEach(function (r) { tbody.appendChild(r); });
+      });
+    });
+  });
+})();
 </script>
 {% block body_extra %}{% endblock %}
 </body>

@@ -50,12 +50,13 @@ logger = logging.getLogger(__name__)
 BASE_URL = "https://data.sec.gov"
 RAW_DIR = Path("data/raw")
 
-# SEC requires a descriptive User-Agent. Override via env so users can set
-# their own contact string — default is safe but identifies the project.
-DEFAULT_UA = os.environ.get(
-    "SEC_USER_AGENT",
-    "energy-intel (https://github.com/) contact@example.com",
-)
+# SEC requires a descriptive User-Agent. Override via the SEC_USER_AGENT
+# env var (set as a GitHub Actions variable for CI). We treat an empty
+# env value the same as missing — GitHub injects "" when the variable is
+# undefined, which would otherwise become the literal UA and 403.
+_FALLBACK_UA = "energy-intel github.com/noopdude1-coder/energy-intel admin@energy-intel.example"
+_ENV_UA = os.environ.get("SEC_USER_AGENT", "").strip()
+DEFAULT_UA = _ENV_UA or _FALLBACK_UA
 
 
 class HttpGetter(Protocol):
