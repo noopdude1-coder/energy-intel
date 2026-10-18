@@ -1,6 +1,6 @@
 # Permian Peer Unit Economics
 
-_Generated 2026-10-11 16:59 UTC. Source: SEC EDGAR XBRL company facts. TTM = trailing 4 quarters or latest 10-K._
+_Generated 2026-10-18 15:04 UTC. Source: SEC EDGAR XBRL company facts. TTM = trailing 4 quarters or latest 10-K._
 
 | Ticker | Filing | TTM OCF | TTM CapEx | FCF | FCF Yield | Net Debt | EBITDAX | ND/EBITDAX |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
